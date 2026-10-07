@@ -1,0 +1,14 @@
+variable "vpc_id" {
+  description = "id vpc for created resourse"
+  type        = string
+}
+
+variable "list_of_open_ports" {
+  description = "open ports"
+  type        = list(number)
+}
+
+variable "instance_type" {
+  type    = string
+  default = "t3.micro"
+}
