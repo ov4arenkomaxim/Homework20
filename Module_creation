@@ -1,8 +1,8 @@
 PS C:\users\maxim\terraform_hw> terraform apply
 module.web_server.data.aws_subnets.public: Reading...
 module.web_server.data.aws_ssm_parameter.al2023: Reading...
-module.web_server.data.aws_ssm_parameter.al2023: Read complete after 0s [id=/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64]
-module.web_server.data.aws_subnets.public: Read complete after 0s [id=eu-central-1]
+module.web_server.data.aws_ssm_parameter.al2023: Read complete after 1s [id=/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64]
+module.web_server.data.aws_subnets.public: Read complete after 1s [id=eu-central-1]
 
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
   + create
@@ -169,13 +169,13 @@ Do you want to perform these actions?
   Enter a value: yes
 
 module.web_server.aws_security_group.this: Creating...
-module.web_server.aws_security_group.this: Creation complete after 3s [id=sg-0d8f53ce1ae61bee9]
+module.web_server.aws_security_group.this: Creation complete after 3s [id=sg-046b30f9fa9192c61]
 module.web_server.aws_instance.this: Creating...
 module.web_server.aws_instance.this: Still creating... [00m10s elapsed]
-module.web_server.aws_instance.this: Creation complete after 13s [id=i-07bc77e54a9e72521]
+module.web_server.aws_instance.this: Creation complete after 13s [id=i-03c46351d40c6ddbd]
 
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
 
 Outputs:
 
-instance_public_ip = "3.73.117.145"
+instance_public_ip = "18.194.207.31"
