@@ -1,0 +1,64 @@
+# публічні підмережі vpc
+data "aws_subnets" "public" {
+  filter {
+    name   = "vpc-id"
+    values = [var.vpc_id]
+  }
+
+  filter {
+    name   = "map-public-ip-on-launch"
+    values = ["true"]
+  }
+}
+
+# Остання Amazon Linux 2023
+data "aws_ssm_parameter" "al2023" {
+  name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"
+}
+
+resource "aws_security_group" "this" {
+  name_prefix = "web-sg-"
+  description = "open port"
+  vpc_id      = var.vpc_id
+
+  dynamic "ingress" {
+    for_each = toset(var.list_of_open_ports)
+    content {
+      description = "Allow port ${ingress.value}"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "web-sg" }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_instance" "this" {
+  ami                         = data.aws_ssm_parameter.al2023.value
+  instance_type               = var.instance_type
+  subnet_id                   = data.aws_subnets.public.ids[0]
+  vpc_security_group_ids      = [aws_security_group.this.id]
+  associate_public_ip_address = true
+
+  user_data = <<-EOF
+    #!/bin/bash
+    dnf install -y nginx
+    systemctl enable --now nginx
+  EOF
+
+  user_data_replace_on_change = true
+
+  tags = { Name = "nginx-server" }
+}
